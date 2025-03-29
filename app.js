@@ -1,8 +1,8 @@
 import "dotenv/config.js";
 import express from "express";
 import mongoose from "mongoose";
-import { env } from "./support/helpers.js";
-import { StatusCode } from "./support/StatusCode.js";
+import { env } from "./source/support/helpers.js";
+import { StatusCode } from "./source/support/StatusCode.js";
 const app = express();
 
 mongoose.connect(env("DATABASE_CONNECTION")).then(() => {
@@ -21,15 +21,15 @@ db.on("open", () => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.set("view engine", "ejs");
 app.use(express.static("public"));
-import HomeRouter from "./routers/HomeRouter.js"
+app.set("view engine", "ejs");
 
+import { HomeRouter } from "./routers/HomeRouter.js";
+app.use("/", HomeRouter);
 
-import TasksRouter from "./routers/TasksRouter.js";
+import { TasksRouter } from "./routers/TasksRouter.js";
 app.use("/task", TasksRouter);
 
-
 app.use((request, response) => {
-  response.status(StatusCode.BAD_REQUEST).render('404', {/**some data */})
-})
+  response.status(StatusCode.BAD_REQUEST).render("404", { title: "Not Found" });
+});
