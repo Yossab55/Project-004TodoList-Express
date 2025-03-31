@@ -36,8 +36,17 @@ async function create(subTask) {
     console.log(`there is error with data ${error}`);
   }
 }
+async function remove(id) {
+  try {
+    const result = await SubTasksModel.deleteOne(id)
+    return result;
+  } catch (error) {
+    console.log(`bad request error with id: ${error}`);
+  }
+}
 
 const SubTaskController = {
   create,
+  remove
 };
 export { SubTaskController };

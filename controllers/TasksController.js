@@ -2,9 +2,10 @@ import { TasksModel } from "../models/TasksModel.js";
 import { StatusCode } from "../source/support/StatusCode.js";
 import { SubTaskController } from "./SubTasksController.js";
 import { addDays } from "../source/support/helpers.js";
+
 async function getAllTasks(request, response) {
   try {
-    const Tasks = await TasksModel.find().populate("subTasks")
+    const Tasks = await TasksModel.find().populate("subTasks");
 
     response.status(StatusCode.GOOD_REQUEST).send(Tasks);
   } catch (error) {
@@ -21,11 +22,11 @@ async function create(request, response) {
   let ids = [];
   if (subTasks && subTasks.length > 0) {
     for (const subTask of subTasks) {
-      console.log(subTask)
+      console.log(subTask);
       ids.push(await SubTaskController.create(subTask));
     }
   }
-  console.log(ids)
+  console.log(ids);
   let date = new Date();
   const DataToInsert = {
     title: request.body.title,
@@ -44,6 +45,20 @@ async function create(request, response) {
     response
       .status(StatusCode.BAD_REQUEST)
       .json({ message: "insert correct data please" });
+  }
+}
+async function remove(request, response) {
+  const subTasksIds = response.task.subTasks;
+  for (const subTask of subTasksIds) {
+    SubTaskController.remove(subTask);
+  }
+  try {
+    const result = await TasksModel.deleteOne(response.task._id);
+    response.status(StatusCode.GOOD_REQUEST).json(result);
+  } catch (error) {
+    response
+      .status(StatusCode.SERVER_ERROR)
+      .json({ message: "server error with database" });
   }
 }
 async function getTask(request, response, next) {
@@ -68,7 +83,8 @@ const TasksController = {
   getAllTasks,
   getTaskById,
   getTask,
-  create
+  create,
+  remove,
 };
 
 export { TasksController };
