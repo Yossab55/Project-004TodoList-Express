@@ -4,4 +4,5 @@ const TasksRouter = express.Router();
 
 TasksRouter.get("/", TasksController.getAllTasks)
 
+TasksRouter.post("/", TasksController.create)
 export {TasksRouter}

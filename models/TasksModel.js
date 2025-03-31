@@ -19,7 +19,7 @@ const tasksSchema = new mongoose.Schema({
     required: true,
     default: new Date()
   },
-  subTask: [{
+  subTasks: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "SubTasks",
   }]
