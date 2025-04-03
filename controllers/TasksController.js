@@ -14,15 +14,14 @@ async function getAllTasks(request, response) {
       .json({ message: "server error with database" });
   }
 }
-function getTaskById(request, response) {
-  response.status(StatusCode.GOOD_REQUEST).json(response.task);
+async function getTaskById(request, response) {
+  response.status(StatusCode.GOOD_REQUEST).json(await response.task.populate("subTasks"));
 }
 async function create(request, response) {
   const subTasks = request.body.subTasks;
-  let ids = [];
+  const ids = [];
   if (subTasks && subTasks.length > 0) {
     for (const subTask of subTasks) {
-      console.log(subTask);
       ids.push(await SubTaskController.create(subTask));
     }
   }
@@ -41,6 +40,29 @@ async function create(request, response) {
     response
       .status(StatusCode.CREATED_SUCCESS)
       .json({ message: "created A new Task" });
+  } catch (error) {
+    response
+      .status(StatusCode.BAD_REQUEST)
+      .json({ message: "insert correct data please" });
+  }
+}
+async function update(request, response) {
+  for (const prop in request.body) {
+    if ("subTasks" == prop) {
+      const ids = [];
+      for (const subTask of request.body[prop]) {
+        ids.push(await SubTaskController.create(subTask));
+      }
+      response.task.subTasks.push(...ids);
+      continue;
+    }
+    if (request.body[prop]) {
+      response.task[prop] = request.body[prop];
+    }
+  }
+  try {
+    const result = await response.task.save();
+    response.status(StatusCode.GOOD_REQUEST).json(await result.populate("subTasks"));
   } catch (error) {
     response
       .status(StatusCode.BAD_REQUEST)
@@ -85,6 +107,7 @@ const TasksController = {
   getTask,
   create,
   remove,
+  update,
 };
 
 export { TasksController };

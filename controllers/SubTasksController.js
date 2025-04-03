@@ -25,20 +25,15 @@ async function create(subTask) {
   };
   try {
     const subTask = new SubTasksModel(data);
-    
     await subTask.save();
-    // response.status(StatusCode.GOOD_REQUEST).json({subTaskId: data._id});
     return subTask._id;
   } catch (error) {
-    // response
-    //   .status(StatusCode.BAD_REQUEST)
-    //   .json({ message: "insert correct data please" });
     console.log(`there is error with data ${error}`);
   }
 }
 async function remove(id) {
   try {
-    const result = await SubTasksModel.deleteOne(id)
+    const result = await SubTasksModel.deleteOne(id);
     return result;
   } catch (error) {
     console.log(`bad request error with id: ${error}`);
@@ -47,6 +42,6 @@ async function remove(id) {
 
 const SubTaskController = {
   create,
-  remove
+  remove,
 };
 export { SubTaskController };
