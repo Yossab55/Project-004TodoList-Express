@@ -59,8 +59,8 @@ npm run dev
 ## Contact
 Feel free to reach out or connect with me!
 
-[LinkedIn: (https://www.linkedin.com/in/yossab-samouel-b71353323/)]
-Email: yossabsamouelwork@gmail.com
+* [LinkedIn](https://www.linkedin.com/in/yossab-samouel-b71353323/)
+* Email: yossabsamouelwork@gmail.com
 
 ## License
 This project is licensed under the MIT License.
